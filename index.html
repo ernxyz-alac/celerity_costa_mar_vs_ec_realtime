@@ -70,12 +70,60 @@
         /* HIGHLIGHT: Colors for countdown elements */
         .highlight-today, #days-number { color: #00e5ff; }
 
+        #match-teams-container {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* Align to bottom so flags stay aligned */
+            gap: 15px; /* Reduced gap */
+            z-index: 3;
+            width: 100%;
+        }
+        .team-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            min-width: 100px;
+        }
+        .team-flag {
+            border-radius: 50%;
+            border: 3px solid white;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            order: 2; /* Ensure flag is below text */
+            margin-top: 10px;
+        }
+        .team-name {
+            font-size: 16px;
+            text-transform: uppercase;
+            text-align: center;
+            order: 1; /* Ensure text is above flag */
+            white-space: normal; /* Allow wrapping */
+        }
+        .vs-text {
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 25px; /* Align with flag vertical center */
+        }
+
+
         #faltan-text, #days-text, #hoy-text, #se-juega-text {
             position: absolute;
         }
 
         /* Specific CSS for Horizontal Screen (768x320) */
         @media (width: 768px) and (height: 320px) {
+            #match-teams-container {
+                top: 12%;
+                left: 35%;
+            }
+            #local-team {
+                position: absolute;
+                left: 18%;
+            }
             .countdown-container {
                 font-size: 30px;
                 text-align: left;
@@ -122,6 +170,14 @@
 
         /* Specific CSS for Vertical Screen (600x800) */
         @media (width: 600px) and (height: 800px) {
+            #match-teams-container {
+                top: 60%;
+                left: 32%;
+            }
+            #local-team {
+                position: absolute;
+                left: 10%;
+            }
             .countdown-container {
                 font-size: 30px;
                 text-align: left;
@@ -168,12 +224,20 @@
         /* Fallback for other sizes (Responsive) */
         @media not all and (width: 768px) and (height: 320px) {
             @media not all and (width: 600px) and (height: 800px) {
+                #match-teams-container {
+                    top: 12%;
+                    left: 35%;
+                }
+                #local-team {
+                    position: absolute;
+                    left: 18%;
+                }
                 .countdown-container {
                     font-size: 30px;
                     text-align: left;
                     /* Adjust positioning here: */
                     top: 11%; 
-                    left: 35%;
+                    left: 34%;
                 }
 
                 #faltan-text {
@@ -217,6 +281,18 @@
 <body>
 <div id="main-container">
     <div id="background-img"></div>
+
+    <div id="match-teams-container">
+        <div id="local-team" class="team-col">
+            <img src="https://flagcdn.com/w160/ci.png" alt="CIV" class="team-flag">
+            <div class="team-name">COSTA DE MARFIL</div>
+        </div>
+        <div class="vs-text">VS</div>
+        <div class="team-col">
+            <img src="https://flagcdn.com/w160/ec.png" alt="ECU" class="team-flag">
+            <div class="team-name">ECUADOR</div>
+        </div>
+    </div>
 
     <div id="mainCard" class="countdown-container">
         <div id="faltan-text">Faltan</div>
