@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Live Game - ECU vs CUW</title>
+    <title>Countdown - CIV vs ECU</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+        }
+        
+        @font-face {
+            font-family: "Bold Font";
+            src: url("./font/bold.ttf");
         }
 
         html, body {
@@ -20,16 +25,19 @@
         }
 
         body {
-            font-family: sans-serif;
+            font-family: "Bold Font";
+            color: white;
         }
 
-        #video {
+        /* HIGHLIGHT: Container for the background image */
+        #background-img {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            background-size: cover;
+            background-position: center;
             z-index: 0;
         }
 
@@ -40,66 +48,167 @@
             overflow: hidden;
         }
 
-        /* Simplified score container with vertical alignment */
-        .live-score-container {
+        /* HIGHLIGHT: Container for the countdown text */
+        .countdown-container {
             position: absolute;
             z-index: 2;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             width: 100%;
             height: 100%;
-            color: white;
-            transition: opacity 0.3s ease;
-            
-            /* HIGHLIGHT: To move the entire score block vertically, adjust this 'top' or use 'margin-top' */
-            top: 0%; 
+            text-align: left;
+            line-height: 1.1;
+            text-shadow: 4px 4px 10px rgba(0,0,0,0.8);
+
+            /* EASY POSITIONING: Adjust these to move the block */
+            top: 0;
+            left: 0;
         }
 
-        .score-text {
-            font-weight: bold;
-            text-shadow: 4px 4px 10px rgba(0,0,0,0.5);
-            line-height: 1;
-        }
+        /* HIGHLIGHT: Colors for countdown elements */
+        .highlight-today, #days-number { color: #00e5ff; }
 
-        /* 
-           HIGHLIGHT: 
-           - To separate the scores from each other, adjust the 'gap' property.
-           - To move the scores vertically, adjust the 'top' property in the media queries below.
-        */
+        #faltan-text, #days-text, #hoy-text, #se-juega-text {
+            position: absolute;
+        }
 
         /* Specific CSS for Horizontal Screen (768x320) */
         @media (width: 768px) and (height: 320px) {
-            .live-score-container {
-                gap: 5%; /* Separation between scores for horizontal setup */
-                top: 22%;   /* Move vertically: adjust this to shift the block up or down */
+            .countdown-container {
+                font-size: 30px;
+                text-align: left;
+                /* Adjust positioning here: */
+                top: 10%; 
+                left: 33%;
             }
-            .score-text {
-                font-size: 90px;
+
+            #faltan-text {
+                top: 45.5%;
+                left: 33%;
+                font-size: 30px;
+            }
+
+            #days-text {
+                top: 53%;
+                left: 38%;
+                font-size: 30px;
+            }
+
+            #days-number{
+                font-size: 70px;
+            }
+
+            .singular-days{
+                left: 42% !important;
+            }
+
+            #hoy-text {
+                top: 44%;
+                left: 33%;
+                font-size: 60px;
+
+                display: inline-block; /* Necesario para transform */
+                transform: scaleX(1.2); /* 1.5 = 150% del ancho original */
+                transform-origin: left center; /* Controla el punto de anclaje */
+            }
+            #se-juega-text{
+                top: 63%;
+                left: 33%;
+                font-size: 30px;
             }
         }
 
         /* Specific CSS for Vertical Screen (600x800) */
         @media (width: 600px) and (height: 800px) {
-            .live-score-container {
-                gap: 50px; /* Separation between scores for vertical setup */
-                top: 10%;  /* Move vertically: adjust this to shift the block up or down */
-                right: 1%;
+            .countdown-container {
+                font-size: 30px;
+                text-align: left;
+                /* Adjust positioning here: */
+                top: 35%; 
+                left: 25%;
             }
-            .score-text {
-                font-size: 120px;
+
+            #faltan-text {
+                top: 45%;
+                left: 32.5%;
+                font-size: 30px;
+            }
+
+            #days-text {
+                top: 48%;
+                left: 40%;
+                font-size: 30px;
+            }
+
+            #days-number{
+                font-size: 70px;
+            }
+
+            .singular-days{
+                left: 45% !important;
+            }
+
+            #hoy-text {
+                top: 44%;
+                left: 33%;
+                font-size: 60px;
+
+                display: inline-block; /* Necesario para transform */
+                transform: scaleX(1.2); /* 1.5 = 150% del ancho original */
+                transform-origin: left center; /* Controla el punto de anclaje */
+            }
+            #se-juega-text{
+                top: 51%;
+                left: 33%;
+                font-size: 30px;
             }
         }
-
         /* Fallback for other sizes (Responsive) */
         @media not all and (width: 768px) and (height: 320px) {
             @media not all and (width: 600px) and (height: 800px) {
-                .live-score-container {
-                    gap: 5%; /* Separation between scores for horizontal setup */
-                    top: 22%;   /* Move vertically: adjust this to shift the block up or down */
+                .countdown-container {
+                    font-size: 30px;
+                    text-align: left;
+                    /* Adjust positioning here: */
+                    top: 11%; 
+                    left: 35%;
                 }
-                .score-text {
-                    font-size: 90px;
+
+                #faltan-text {
+                    top: 45.5%;
+                    left: 33%;
+                    font-size: 30px;
+                }
+
+                #days-text {
+                    top: 53%;
+                    left: 38%;
+                    font-size: 30px;
+                }
+
+                #days-number{
+                    font-size: 70px;
+                }
+
+                .singular-days{
+                    left: 42% !important;
+                }
+
+                #hoy-text {
+                    top: 44%;
+                    left: 33%;
+                    font-size: 60px;
+
+                    display: inline-block; /* Necesario para transform */
+                    transform: scaleX(1.2); /* 1.5 = 150% del ancho original */
+                    transform-origin: left center; /* Controla el punto de anclaje */
+                }
+                #se-juega-text{
+                    top: 63%;
+                    left: 33%;
+                    font-size: 30px;
                 }
             }
         }
@@ -107,99 +216,91 @@
 </head>
 <body>
 <div id="main-container">
-    <!-- The video source is handled dynamically by JavaScript below -->
-    <video id="video" autoplay muted loop playsinline preload="auto"></video>
+    <div id="background-img"></div>
 
-    <!-- Simplified Layout: No flags, only scores vertically aligned -->
-    <div id="mainCard" class="live-score-container">
-        <div id="home-score" class="score-text"></div>
-        <!-- Vertical separator managed by CSS gap -->
-        <div id="away-score" class="score-text"></div>
+    <div id="mainCard" class="countdown-container">
+        <div id="faltan-text">Faltan</div>
+        <div id="days-text" class="highlight-number">
+            <span id="days-number">0</span> días
+        </div>
+
+        <div id="hoy-text" class="highlight-today" style="display: none;">HOY</div>
+        <div id="se-juega-text" style="display: none;">SE JUEGA</div>
     </div>
 </div>
 
 <script>
     /**
-     * Logic for Screen Size and Video Selection:
-     * Shows 'ec_vs_cu.mp4' for 768x320 (horizontal)
-     * Shows 'ec_vs_cu_vert.mp4' for 600x800 (vertical)
+     * Logic for Screen Size and Image Selection:
      */
-    function updateVideoSource() {
-        const video = document.getElementById('video');
+    function updateBackground() {
+        const bg = document.getElementById('background-img');
         const width = window.innerWidth;
         const height = window.innerHeight;
         
-        let videoSrc = "";
+        let imgSrc = "";
         if (width === 768 && height === 320) {
-            videoSrc = "./video/ec_vs_cu.mp4";
+            imgSrc = "./img/horizontal.png";
         } else if (width === 600 && height === 800) {
-            videoSrc = "./video/ec_vs_cu_vert.mp4";
+            imgSrc = "./img/vertical.png";
         } else {
-            // Default logic based on orientation if exact sizes don't match
-            videoSrc = (height > width) ? "./video/ec_vs_cu_vert.mp4" : "./video/ec_vs_cu.mp4";
+            imgSrc = (height > width) ? "./img/vertical.png" : "./img/horizontal.png";
         }
 
-        // Only update and reload if the source actually changes
-        const currentSrc = video.src;
-        const absoluteVideoPath = new URL(videoSrc, window.location.href).href;
-        
-        if (currentSrc !== absoluteVideoPath) {
-            video.src = videoSrc;
-            video.load();
-        }
+        bg.style.backgroundImage = `url('${imgSrc}')`;
     }
 
-    // Initialize video and listen for window size changes
-    updateVideoSource();
-    window.addEventListener('resize', updateVideoSource);
+    updateBackground();
+    window.addEventListener('resize', updateBackground);
 
     /**
-     * Score Logic:
-     * Getting the score from the server and managing local storage.
-     * Match: Ecuador vs Curazao
+     * Countdown Logic:
+     * Match: June 14th, 2026, 06:00 PM Guayaquil Time (GMT-5)
      */
-    const GAME_ID = "ecuador_vs_curazao";
-    const STORAGE_KEY = "ecu_vs_cuw_score";
-    
-    // Load initial score from local storage or default to 0-0
-    let previousNumbers = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [0, 0];
-    document.getElementById("home-score").textContent = previousNumbers[0];
-    document.getElementById("away-score").textContent = previousNumbers[1];
+    function updateCountdown() {
+        // Target: June 14th, 2026
+        const targetDate = new Date("2026-06-14T00:00:00-05:00");
 
-    async function loadData() {
-        try {
-            const res = await fetch("https://doradobet-server.onrender.com/data?gameId=15682183");
-            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-            
-            const data = await res.json();
-            
-            if (!data.score || data.score.trim() === "") return;
+        // Current: Today, normalized to midnight for accurate day difference
+        const now = new Date();
+        const todayAtMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-            // Parse score from format like "Team A -> 1, Team B -> 2"
-            const scoreParts = data.score.split(", ");
-            
-            if (scoreParts.length === 2) {
-                const homeScore = parseInt(scoreParts[0].split(" -> ")[1]);
-                const awayScore = parseInt(scoreParts[1].split(" -> ")[1]);
-                const currentNumbers = [homeScore, awayScore];
-                
-                const savedScore = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [0, 0];
+        // Calculate difference in milliseconds
+        const diffTime = targetDate - todayAtMidnight;
 
-                // Update UI and storage if the score changed
-                if (currentNumbers[0] !== savedScore[0] || currentNumbers[1] !== savedScore[1]) {
-                    document.getElementById("home-score").textContent = currentNumbers[0];
-                    document.getElementById("away-score").textContent = currentNumbers[1];
-                    
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentNumbers));
-                    previousNumbers = currentNumbers;
-                }
-            }
-        } catch (error) { console.error("Error loading data:", error); }
+        // Calculate days left
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        const faltanEl = document.getElementById("faltan-text");
+        const daysEl = document.getElementById("days-text");
+        
+        const seJuegaEl = document.getElementById("se-juega-text");
+        const hoyEl = document.getElementById("hoy-text");
+
+        // Check if it's the day of the match
+        const isMatchDay = diffDays === 0;
+
+        if (diffDays > 0) {
+            // Future, show countdown
+            faltanEl.textContent = diffDays === 1 ? "FALTA" : "FALTAN";
+            daysEl.innerHTML = `<span id="days-number">${diffDays}</span> ${diffDays === 1 ? "DÍA" : "DÍAS"}`;
+            if(diffDays === 1) daysEl.classList.add('singular-days')
+
+            faltanEl.style.display = 'block';
+            daysEl.style.display = 'block';
+            seJuegaEl.style.display = 'none';
+            hoyEl.style.display = 'none';
+        } else {
+            // Match day or passed, show Empieza HOY
+            faltanEl.style.display = 'none';
+            daysEl.style.display = 'none';
+            seJuegaEl.style.display = 'block';
+            hoyEl.style.display = 'block';
+        }
     }
-
-    // Fetch data immediately and then every second
-    loadData();
-    setInterval(loadData, 3000);
+    updateCountdown();
+    // Update every minute
+    setInterval(updateCountdown, 60000);
 </script>
 </body>
 </html>
